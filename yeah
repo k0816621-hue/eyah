@@ -8,137 +8,11 @@ local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local KeySystemEnabled = false  -- Set to false to disable key system
-local PastebinKeyURL = "https://pastebin.com/raw/YOURKEYPASTEBIN"  -- Put your Pastebin raw link here
-local HardcodedKey = "Nigga"  -- Fallback/secret key (change this!)
-local Unlocked = false  -- Tracks if key was enteredff
-local function Notify(title, text, duration)
-    NotifyTitle.Text = title
-    NotifyText.Text = text
-    NotifyFrame.Visible = true
-    NotifyFrame.Position = UDim2.new(1, -320, 1, -100)
-    TweenService:Create(NotifyFrame, TweenInfo.new(0.4), {Position = UDim2.new(1, -320, 1, -170)}):Play()
-    wait(duration or 4)
-    TweenService:Create(NotifyFrame, TweenInfo.new(0.4), {Position = UDim2.new(1, -320, 1, -100)}):Play()
-    wait(0.4)
-    NotifyFrame.Visible = false
-end
-
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "PinkHub"
 ScreenGui.ResetOnSpawn = false
 ScreenGui.Parent = CoreGui
--- Pink Key System 💗🔑
-if KeySystemEnabled then
-    local KeyGui = Instance.new("Frame")
-    KeyGui.Size = UDim2.new(1, 0, 1, 0)
-    KeyGui.Position = UDim2.new(0, 0, 0, 0)
-    KeyGui.BackgroundColor3 = Color3.fromRGB(15, 10, 25)  -- Dark pinkish bg
-    KeyGui.BorderSizePixel = 0
-    KeyGui.Parent = ScreenGui
-
-    local KeyCorner = Instance.new("UICorner")
-    KeyCorner.CornerRadius = UDim.new(0, 0)  -- Full screen
-    KeyCorner.Parent = KeyGui
-
-    local Gradient = Instance.new("UIGradient")
-    Gradient.Color = Color3.fromRGB(255, 100, 255):TweenTo(Color3.fromRGB(150, 50, 200), "Sit", 1, true)
-    Gradient.Rotation = 45
-    Gradient.Parent = KeyGui
-
-    local KeyFrame = Instance.new("Frame")
-    KeyFrame.Size = UDim2.new(0, 350, 0, 250)
-    KeyFrame.Position = UDim2.new(0.5, -175, 0.5, -125)
-    KeyFrame.BackgroundColor3 = Color3.fromRGB(25, 15, 40)
-    KeyFrame.Parent = KeyGui
-
-    local FrameCorner = Instance.new("UICorner")
-    FrameCorner.CornerRadius = UDim.new(0, 16)
-    FrameCorner.Parent = KeyFrame
-
-    local Glow = Instance.new("UIStroke")
-    Glow.Color = Color3.fromRGB(255, 150, 255)
-    Glow.Thickness = 3
-    Glow.Transparency = 0.5
-    Glow.Parent = KeyFrame
-
-    local TitleKey = Instance.new("TextLabel")
-    TitleKey.Size = UDim2.new(1, 0, 0, 60)
-    TitleKey.BackgroundTransparency = 1
-    TitleKey.Text = "Unlock Pink Hub 💗"
-    TitleKey.TextColor3 = Color3.fromRGB(255, 140, 255)
-    TitleKey.Font = Enum.Font.GothamBold
-    TitleKey.TextSize = 32
-    TitleKey.Parent = KeyFrame
-
-    local KeyInput = Instance.new("TextBox")
-    KeyInput.Size = UDim2.new(1, -40, 0, 50)
-    KeyInput.Position = UDim2.new(0, 20, 0, 80)
-    KeyInput.BackgroundColor3 = Color3.fromRGB(40, 20, 60)
-    KeyInput.Text = ""
-    KeyInput.PlaceholderText = "Enter Key Here..."
-    KeyInput.TextColor3 = Color3.fromRGB(255, 200, 255)
-    KeyInput.Font = Enum.Font.Gotham
-    KeyInput.TextSize = 18
-    KeyInput.Parent = KeyFrame
-
-    local InputCorner = Instance.new("UICorner")
-    InputCorner.CornerRadius = UDim.new(0, 10)
-    InputCorner.Parent = KeyInput
-
-    local UnlockBtn = Instance.new("TextButton")
-    UnlockBtn.Size = UDim2.new(1, -40, 0, 45)
-    UnlockBtn.Position = UDim2.new(0, 20, 0, 150)
-    UnlockBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 255)
-    UnlockBtn.Text = "Unlock 💖"
-    UnlockBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
-    UnlockBtn.Font = Enum.Font.GothamBold
-    UnlockBtn.TextSize = 20
-    UnlockBtn.Parent = KeyFrame
-
-    local BtnCorner = Instance.new("UICorner")
-    BtnCorner.CornerRadius = UDim.new(0, 10)
-    BtnCorner.Parent = UnlockBtn
-
-    -- Hover effects
-    UnlockBtn.MouseEnter:Connect(function()
-        TweenService:Create(UnlockBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 150, 255)}):Play()
-    end)
-    UnlockBtn.MouseLeave:Connect(function()
-        TweenService:Create(UnlockBtn, TweenInfo.new(0.2), {BackgroundColor3 = Color3.fromRGB(255, 100, 255)}):Play()
-    end)
-
-    local CopyBtn = Instance.new("TextButton")
-    CopyBtn.Size = UDim2.new(0.48, -25, 0, 35)
-    CopyBtn.Position = UDim2.new(0, 20, 0, 210)
-    CopyBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
-    CopyBtn.Text = "Copy Key"
-    CopyBtn.TextColor3 = Color3.fromRGB(255, 200, 255)
-    CopyBtn.Font = Enum.Font.Gotham
-    CopyBtn.TextSize = 14
-    CopyBtn.Parent = KeyFrame
-
-    local CopyCorner = Instance.new("UICorner")
-    CopyCorner.CornerRadius = UDim.new(0, 8)
-    CopyCorner.Parent = CopyBtn
-
-    local DiscordBtn = Instance.new("TextButton")
-    DiscordBtn.Size = UDim2.new(0.48, -5, 0, 35)
-    DiscordBtn.Position = UDim2.new(0.52, 0, 0, 210)
-    DiscordBtn.BackgroundColor3 = Color3.fromRGB(80, 40, 120)
-    DiscordBtn.Text = "Discord"
-    DiscordBtn.TextColor3 = Color3.fromRGB(255, 200, 255)
-    DiscordBtn.Font = Enum.Font.Gotham
-    DiscordBtn.TextSize = 14
-    DiscordBtn.Parent = KeyFrame
-
-    local DiscordCorner = Instance.new("UICorner")
-    DiscordCorner.CornerRadius = UDim.new(0, 8)
-    DiscordCorner.Parent = DiscordBtn
-
-    -- Copy key function
-    CopyBtn.MouseButton1Click:Connect(function()
 
 local Main = Instance.new("Frame")
 Main.Size = UDim2.new(0, 600, 0, 400)
@@ -234,6 +108,17 @@ NotifyText.Font = Enum.Font.Gotham
 NotifyText.TextSize = 14
 NotifyText.Parent = NotifyFrame
 
+local function Notify(title, text, duration)
+    NotifyTitle.Text = title
+    NotifyText.Text = text
+    NotifyFrame.Visible = true
+    NotifyFrame.Position = UDim2.new(1, -320, 1, -100)
+    TweenService:Create(NotifyFrame, TweenInfo.new(0.4), {Position = UDim2.new(1, -320, 1, -170)}):Play()
+    wait(duration or 4)
+    TweenService:Create(NotifyFrame, TweenInfo.new(0.4), {Position = UDim2.new(1, -320, 1, -100)}):Play()
+    wait(0.4)
+    NotifyFrame.Visible = false
+end
 
 -- Keybind
 local Keybind = Enum.KeyCode.K
@@ -367,6 +252,7 @@ local function CreateTab(name)
         ToggleBtnCorner.CornerRadius = UDim.new(0, 12)
         ToggleBtnCorner.Parent = ToggleBtn
 
+        local state = default
         local state = default or false
         if default then
             ToggleBtn.BackgroundColor3 = Color3.fromRGB(255, 100, 255)
@@ -377,6 +263,7 @@ local function CreateTab(name)
             TweenService:Create(ToggleBtn, TweenInfo.new(0.2), {
                 BackgroundColor3 = state and Color3.fromRGB(255, 100, 255) or Color3.fromRGB(80, 80, 100)
             }):Play()
+            if callback then callback(state) end
             if callback then 
                 task.spawn(callback, state)  -- Use task.spawn to prevent errors blocking
             end
@@ -437,13 +324,22 @@ local function CreateTab(name)
         ValueLabel.Text = tostring(value)
 
         local dragging = false
-
+        
         SliderKnob.InputBegan:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
             if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
                 dragging = true
             end
         end)
 
+        UIS.InputEnded:Connect(function(input)
+            if input.UserInputType == Enum.UserInputType.MouseButton1 then
+                dragging = false
+            end
+        end)
+
+        UIS.InputChanged:Connect(function(input)
+            if dragging and input.UserInputType == Enum.UserInputType.MouseMovement then
         SliderKnob.InputChanged:Connect(function(input)
             if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
                 local relativeX = math.clamp((input.Position.X - SliderBar.AbsolutePosition.X) / SliderBar.AbsoluteSize.X, 0, 1)
@@ -577,48 +473,24 @@ local function ApplyHitbox(char)
     local hrp = char:FindFirstChild("HumanoidRootPart")
     if hrp and hrp:IsA("BasePart") then
         if not Originals[hrp] then
-            Originals[hrp] = {
-                Size = hrp.Size,
-                Transparency = hrp.Transparency,
-                Material = hrp.Material,
-                Color = hrp.Color,
-                CanCollide = hrp.CanCollide
-            }
+            Originals[hrp] = {Size = hrp.Size, Transparency = hrp.Transparency, CanCollide = hrp.CanCollide}
         end
-
-        -- SLAY HITBOX SETTINGS 💖
-        hrp.Size = Vector3.new(HitboxSize * 2, HitboxSize * 2, HitboxSize * 3)  -- Tall & wide for max reach
-        hrp.Transparency = 0.65                                                 -- Perfect see-through
-        hrp.Material = Enum.Material.Neon                                       -- Glowing edges = SLAY
-        hrp.Color = Color3.fromRGB(255, 150, 255)                                -- Hot pink glow
-        hrp.CanCollide = false                                                  -- No pushing
+        hrp.Size = Vector3.new(HitboxSize * 2, HitboxSize * 2, HitboxSize * 2)
+        hrp.Transparency = 0.5
+        hrp.CanCollide = false
     end
 end
 
 local function RevertHitbox(char)
     if not char then return end
     local hrp = char:FindFirstChild("HumanoidRootPart")
-    if hrp and hrp:IsA("BasePart") then
-        local saved = Originals[hrp]
-        if saved then
-            pcall(function()
-                hrp.Size = saved.Size
-                hrp.Transparency = saved.Transparency
-                hrp.Material = saved.Material
-                hrp.Color = saved.Color
-                hrp.CanCollide = saved.CanCollide ~= false
-            end)
-            Originals[hrp] = nil
-        else
-            -- Force default if something went wrong
-            pcall(function()
-                hrp.Size = Vector3.new(2, 2, 1)
-                hrp.Transparency = 1
-                hrp.Material = Enum.Material.Plastic
-                hrp.Color = Color3.fromRGB(163, 162, 165)
-                hrp.CanCollide = true
-            end)
-        end
+    if hrp and hrp:IsA("BasePart") and Originals[hrp] then
+        hrp.Size = Originals[hrp].Size
+        hrp.Shape = Originals[hrp].Shape
+        hrp.Transparency = Originals[hrp].Transparency
+        hrp.Orientation = Originals[hrp].Orientation
+        hrp.CanCollide = Originals[hrp].CanCollide
+        Originals[hrp] = nil
     end
 end
 
@@ -655,34 +527,14 @@ local function EnableHitbox()
 end
 
 local function DisableHitbox()
-    -- Revert ALL players, even if they respawned
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= Players.LocalPlayer and player.Character then
             RevertHitbox(player.Character)
         end
     end
-
-    -- Also clear any leftover stored originals
-    for part, _ in pairs(Originals) do
-        if part and part.Parent then
-            -- Force reset just in case
-            pcall(function()
-                part.Size = Vector3.new(2, 1, 1)  -- Default head size
-                part.Shape = Enum.PartType.Block
-                part.Transparency = 0
-                part.CanCollide = true
-            end)
-        end
-    end
-
-    -- Disconnect all connections
     for _, conn in pairs(Connections) do
-        if conn and conn.Connected then
-            conn:Disconnect()
-        end
+        conn:Disconnect()
     end
-
-    -- Full cleanup
     Connections = {}
     Originals = {}
 end
@@ -802,21 +654,18 @@ ScriptsTab:Toggle("Enable", false, function(state)
     HitboxEnabled = state
     if state then
         EnableHitbox()
-        Notify("Hitbox Expanded!", "Activated on others 🌸", 4)
+        Notify("Hitbox Expanded!", "Cylinders activated on others 🌸", 4)
     else
-        DisableHitbox()  -- Now uses the stronger version
-        Notify("Hitbox Disabled", "Everyone reverted to normal 👀", 4)
+        DisableHitbox()
+        Notify("Hitbox Reverted", "Back to normal 👀", 4)
     end
 end)
-ScriptsTab:Slider("Size", 3, 30, 8, function(value)
+
+ScriptsTab:Slider("Size", 1, 20, 5, function(value)
     HitboxSize = value
     if HitboxEnabled then
-        for _, player in pairs(Players:GetPlayers()) do
-            if player ~= Players.LocalPlayer and player.Character then
-                ApplyHitbox(player.Character)
-            end
-        end
-        Notify("Slay Hitbox", "Size set to " .. value .. " 💅", 2)
+        DisableHitbox()
+        EnableHitbox()
     end
 end)
 
@@ -835,7 +684,15 @@ end)
 
 -- NEW: Teleport List
 ScriptsTab:Section("Teleport")
+local playerList = GetPlayerList()
+local TeleportDropdown = ScriptsTab:Dropdown("Select Player", playerList, playerList[1] or "None")
 
+ScriptsTab:Button("Teleport", function()
+    local selected = TeleportDropdown.getSelected()
+    if selected then
+        TeleportTo(selected)
+    else
+        Notify("Error", "No player selected", 4)
 local playerList = GetPlayerList()
 local TeleportDropdown = ScriptsTab:Dropdown("Select Player", playerList, playerList[1] or "None", function(selectedName)
     if selectedName and selectedName ~= "None" then
