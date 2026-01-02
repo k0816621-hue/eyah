@@ -9,15 +9,7 @@ local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
 local function Notify(title, text, duration)
-    NotifyTitle.Text = title
-    NotifyText.Text = text
-    NotifyFrame.Visible = true
-    NotifyFrame.Position = UDim2.new(1, -320, 1, -100)
-    TweenService:Create(NotifyFrame, TweenInfo.new(0.4), {Position = UDim2.new(1, -320, 1, -170)}):Play()
-    wait(duration or 4)
-    TweenService:Create(NotifyFrame, TweenInfo.new(0.4), {Position = UDim2.new(1, -320, 1, -100)}):Play()
-    wait(0.4)
-    NotifyFrame.Visible = false
+    print("[" .. title .. "] " .. text)
 end
 
 local ScreenGui = Instance.new("ScreenGui")
