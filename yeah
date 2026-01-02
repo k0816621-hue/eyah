@@ -462,24 +462,48 @@ local function ApplyHitbox(char)
     local hrp = char:FindFirstChild("HumanoidRootPart")
     if hrp and hrp:IsA("BasePart") then
         if not Originals[hrp] then
-            Originals[hrp] = {Size = hrp.Size, Transparency = hrp.Transparency, CanCollide = hrp.CanCollide}
+            Originals[hrp] = {
+                Size = hrp.Size,
+                Transparency = hrp.Transparency,
+                Material = hrp.Material,
+                Color = hrp.Color,
+                CanCollide = hrp.CanCollide
+            }
         end
-        hrp.Size = Vector3.new(HitboxSize * 2, HitboxSize * 2, HitboxSize * 2)
-        hrp.Transparency = 0.5
-        hrp.CanCollide = false
+
+        -- SLAY HITBOX SETTINGS 💖
+        hrp.Size = Vector3.new(HitboxSize * 2, HitboxSize * 2, HitboxSize * 3)  -- Tall & wide for max reach
+        hrp.Transparency = 0.65                                                 -- Perfect see-through
+        hrp.Material = Enum.Material.Neon                                       -- Glowing edges = SLAY
+        hrp.Color = Color3.fromRGB(255, 150, 255)                                -- Hot pink glow
+        hrp.CanCollide = false                                                  -- No pushing
     end
 end
 
 local function RevertHitbox(char)
     if not char then return end
     local hrp = char:FindFirstChild("HumanoidRootPart")
-    if hrp and hrp:IsA("BasePart") and Originals[hrp] then
-        hrp.Size = Originals[hrp].Size
-        hrp.Shape = Originals[hrp].Shape
-        hrp.Transparency = Originals[hrp].Transparency
-        hrp.Orientation = Originals[hrp].Orientation
-        hrp.CanCollide = Originals[hrp].CanCollide
-        Originals[hrp] = nil
+    if hrp and hrp:IsA("BasePart") then
+        local saved = Originals[hrp]
+        if saved then
+            pcall(function()
+                hrp.Size = saved.Size
+                hrp.Transparency = saved.Transparency
+                hrp.Material = saved.Material
+                hrp.Color = saved.Color
+                hrp.CanCollide = saved.CanCollide ~= false
+            end)
+            Originals[hrp] = nil
+        else
+            -- Force default if something went wrong
+            pcall(function()
+                hrp.Size = Vector3.new(2, 2, 1)
+                hrp.Transparency = 1
+                hrp.Material = Enum.Material.Plastic
+                hrp.Color = Color3.fromRGB(163, 162, 165)
+                hrp.CanCollide = true
+            end)
+        end
     end
 end
 
@@ -516,14 +540,34 @@ local function EnableHitbox()
 end
 
 local function DisableHitbox()
+    -- Revert ALL players, even if they respawned
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= Players.LocalPlayer and player.Character then
             RevertHitbox(player.Character)
         end
     end
-    for _, conn in pairs(Connections) do
-        conn:Disconnect()
+
+    -- Also clear any leftover stored originals
+    for part, _ in pairs(Originals) do
+        if part and part.Parent then
+            -- Force reset just in case
+            pcall(function()
+                part.Size = Vector3.new(2, 1, 1)  -- Default head size
+                part.Shape = Enum.PartType.Block
+                part.Transparency = 0
+                part.CanCollide = true
+            end)
+        end
     end
+
+    -- Disconnect all connections
+    for _, conn in pairs(Connections) do
+        if conn and conn.Connected then
+            conn:Disconnect()
+        end
+    end
+
+    -- Full cleanup
     Connections = {}
     Originals = {}
 end
@@ -643,18 +687,21 @@ ScriptsTab:Toggle("Enable", false, function(state)
     HitboxEnabled = state
     if state then
         EnableHitbox()
-        Notify("Hitbox Expanded!", "Cylinders activated on others 🌸", 4)
+        Notify("Hitbox Expanded!", "Activated on others 🌸", 4)
     else
-        DisableHitbox()
-        Notify("Hitbox Reverted", "Back to normal 👀", 4)
+        DisableHitbox()  -- Now uses the stronger version
+        Notify("Hitbox Disabled", "Everyone reverted to normal 👀", 4)
     end
 end)
-
-ScriptsTab:Slider("Size", 1, 20, 5, function(value)
+ScriptsTab:Slider("Size", 3, 30, 8, function(value)
     HitboxSize = value
     if HitboxEnabled then
-        DisableHitbox()
-        EnableHitbox()
+        for _, player in pairs(Players:GetPlayers()) do
+            if player ~= Players.LocalPlayer and player.Character then
+                ApplyHitbox(player.Character)
+            end
+        end
+        Notify("Slay Hitbox", "Size set to " .. value .. " 💅", 2)
     end
 end)
 
