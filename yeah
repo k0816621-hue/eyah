@@ -471,12 +471,12 @@ local function ApplyHitbox(char)
             }
         end
 
-        -- Clean plastic look + good for throwing fireballs
-        hrp.Size = Vector3.new(HitboxSize * 1.8, HitboxSize * 1.8, HitboxSize * 2.2)  -- Balanced size
-        hrp.Transparency = 0.5                                                    -- Exactly as you wanted
-        hrp.Material = Enum.Material.SmoothPlastic                                 -- Clean plastic (no glow)
-        hrp.Color = Color3.fromRGB(255, 200, 255)                                  -- Soft pink tint (cute!)
-        hrp.CanCollide = false                                                    -- Important for not blocking yourself
+        -- Clean plastic look + safe for fireball throwing
+        hrp.Size = Vector3.new(HitboxSize * 1.5, HitboxSize * 1.5, HitboxSize * 2)  -- Not too big
+        hrp.Transparency = 0.5                                                    -- Exactly 0.5
+        hrp.Material = Enum.Material.SmoothPlastic                                -- Plastic as requested
+        hrp.Color = Color3.fromRGB(255, 200, 255)                                 -- Soft pink (optional - remove if you want original color)
+        hrp.CanCollide = false                                                    -- Crucial for not blocking your tools
     end
 end
 
