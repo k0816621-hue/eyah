@@ -452,9 +452,9 @@ local function CreateTab(name)
     return elements
 end
 
--- Hitbox Expander Logic (already excludes self)
+-- Hitbox Expander Logic (Fixed for fireball throwing + Plastic look)
 local HitboxEnabled = false
-local HitboxSize = 5
+local HitboxSize = 8  -- Starting size (you can change with slider)
 local Originals = {}
 
 local function ApplyHitbox(char)
@@ -471,12 +471,12 @@ local function ApplyHitbox(char)
             }
         end
 
-        -- SLAY HITBOX SETTINGS 💖
-        hrp.Size = Vector3.new(HitboxSize * 2, HitboxSize * 2, HitboxSize * 3)  -- Tall & wide for max reach
-        hrp.Transparency = 0.65                                                 -- Perfect see-through
-        hrp.Material = Enum.Material.Neon                                       -- Glowing edges = SLAY
-        hrp.Color = Color3.fromRGB(255, 150, 255)                                -- Hot pink glow
-        hrp.CanCollide = false                                                  -- No pushing
+        -- Clean plastic look + good for throwing fireballs
+        hrp.Size = Vector3.new(HitboxSize * 1.8, HitboxSize * 1.8, HitboxSize * 2.2)  -- Balanced size
+        hrp.Transparency = 0.5                                                    -- Exactly as you wanted
+        hrp.Material = Enum.Material.SmoothPlastic                                 -- Clean plastic (no glow)
+        hrp.Color = Color3.fromRGB(255, 200, 255)                                  -- Soft pink tint (cute!)
+        hrp.CanCollide = false                                                    -- Important for not blocking yourself
     end
 end
 
@@ -494,15 +494,6 @@ local function RevertHitbox(char)
                 hrp.CanCollide = saved.CanCollide ~= false
             end)
             Originals[hrp] = nil
-        else
-            -- Force default if something went wrong
-            pcall(function()
-                hrp.Size = Vector3.new(2, 2, 1)
-                hrp.Transparency = 1
-                hrp.Material = Enum.Material.Plastic
-                hrp.Color = Color3.fromRGB(163, 162, 165)
-                hrp.CanCollide = true
-            end)
         end
     end
 end
@@ -517,35 +508,30 @@ local function EnableHitbox()
         end
     end
 
+    -- Handle new players / respawns
     Connections.PlayerAdded = Players.PlayerAdded:Connect(function(player)
         if player ~= Players.LocalPlayer then
             player.CharacterAdded:Connect(function(char)
-                wait(0.5)  -- Wait for head to load
+                task.wait(0.5)
                 ApplyHitbox(char)
             end)
-            if player.Character then
-                ApplyHitbox(player.Character)
-            end
         end
     end)
-
-    for _, player in pairs(Players:GetPlayers()) do
-        if player ~= Players.LocalPlayer and player.Character then
-            Connections[player] = player.CharacterAdded:Connect(function(char)
-                wait(0.5)
-                ApplyHitbox(char)
-            end)
-        end
-    end
 end
 
 local function DisableHitbox()
-    -- Revert ALL players, even if they respawned
     for _, player in pairs(Players:GetPlayers()) do
         if player ~= Players.LocalPlayer and player.Character then
             RevertHitbox(player.Character)
         end
     end
+
+    for _, conn in pairs(Connections) do
+        if conn.Connected then conn:Disconnect() end
+    end
+    Connections = {}
+    Originals = {}
+end
 
     -- Also clear any leftover stored originals
     for part, _ in pairs(Originals) do
@@ -687,13 +673,14 @@ ScriptsTab:Toggle("Enable", false, function(state)
     HitboxEnabled = state
     if state then
         EnableHitbox()
-        Notify("Hitbox Expanded!", "Activated on others 🌸", 4)
+        Notify("Hitbox On", "Active 💗", 4)
     else
-        DisableHitbox()  -- Now uses the stronger version
-        Notify("Hitbox Disabled", "Everyone reverted to normal 👀", 4)
+        DisableHitbox()
+        Notify("Hitbox Off", "Back to normal", 4)
     end
 end)
-ScriptsTab:Slider("Size", 3, 30, 8, function(value)
+
+ScriptsTab:Slider("Size", 4, 20, 8, function(value)
     HitboxSize = value
     if HitboxEnabled then
         for _, player in pairs(Players:GetPlayers()) do
@@ -701,7 +688,6 @@ ScriptsTab:Slider("Size", 3, 30, 8, function(value)
                 ApplyHitbox(player.Character)
             end
         end
-        Notify("Slay Hitbox", "Size set to " .. value .. " 💅", 2)
     end
 end)
 
