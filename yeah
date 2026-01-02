@@ -1,3 +1,8 @@
+-- Custom Rayfield-Like Pink Hub 💗 (Updated with ESP Toggle & Teleport Dropdown!)
+-- Hitbox Expander: Works on all except local player
+-- ESP: Toggle for light pink nametags on others
+-- Teleport: Dropdown to select player and teleport button
+
 local TweenService = game:GetService("TweenService")
 local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
