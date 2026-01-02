@@ -8,9 +8,7 @@ local UIS = game:GetService("UserInputService")
 local Players = game:GetService("Players")
 local RunService = game:GetService("RunService")
 local CoreGui = game:GetService("CoreGui")
-local function Notify(title, text, duration)
-    print("[" .. title .. "] " .. text)
-end
+
 
 local ScreenGui = Instance.new("ScreenGui")
 ScreenGui.Name = "PinkHub"
@@ -80,36 +78,6 @@ Content.BackgroundTransparency = 1
 Content.Parent = Main
 
 local CurrentTab = nil
-
--- Notification System
-local NotifyFrame = Instance.new("Frame")
-NotifyFrame.Size = UDim2.new(0, 300, 0, 80)
-NotifyFrame.Position = UDim2.new(1, -320, 1, -100)
-NotifyFrame.BackgroundColor3 = Color3.fromRGB(30, 30, 50)
-NotifyFrame.Visible = false
-NotifyFrame.Parent = ScreenGui
-
-local NotifyCorner = Instance.new("UICorner")
-NotifyCorner.CornerRadius = UDim.new(0, 10)
-NotifyCorner.Parent = NotifyFrame
-
-local NotifyTitle = Instance.new("TextLabel")
-NotifyTitle.Size = UDim2.new(1, -20, 0, 30)
-NotifyTitle.Position = UDim2.new(0, 10, 0, 5)
-NotifyTitle.BackgroundTransparency = 1
-NotifyTitle.TextColor3 = Color3.fromRGB(255, 180, 255)
-NotifyTitle.Font = Enum.Font.GothamBold
-NotifyTitle.TextSize = 18
-NotifyTitle.Parent = NotifyFrame
-
-local NotifyText = Instance.new("TextLabel")
-NotifyText.Size = UDim2.new(1, -20, 0, 30)
-NotifyText.Position = UDim2.new(0, 10, 0, 35)
-NotifyText.BackgroundTransparency = 1
-NotifyText.TextColor3 = Color3.fromRGB(220, 220, 255)
-NotifyText.Font = Enum.Font.Gotham
-NotifyText.TextSize = 14
-NotifyText.Parent = NotifyFrame
 
 
 -- Keybind
@@ -640,9 +608,9 @@ local function TeleportTo(playerName)
     local target = Players:FindFirstChild(playerName)
     if target and target.Character and Players.LocalPlayer.Character then
         Players.LocalPlayer.Character:MoveTo(target.Character.HumanoidRootPart.Position)
-        Notify("Teleported!", "To " .. playerName .. " 🌸", 4)
+        print("Teleported!", "To " .. playerName .. " 🌸", 4)
     else
-        Notify("Error", "Player not found or no character", 4)
+        print("Error", "Player not found or no character", 4)
     end
 end
 
@@ -655,7 +623,7 @@ local SettingsTab = CreateTab("Settings")
 HomeTab:Section("Welcome 💕")
 HomeTab:Button("Discord", function()
 
-    Notify("Success!", "💗", 5)
+    print("Success!", "💗", 5)
 end)
 
 -- Scripts Tab
@@ -665,10 +633,10 @@ ScriptsTab:Toggle("Enable", false, function(state)
     HitboxEnabled = state
     if state then
         EnableHitbox()
-        Notify("Hitbox On", "Active 💗", 4)
+        print("Hitbox On", "Active 💗", 4)
     else
         DisableHitbox()
-        Notify("Hitbox Off", "Back to normal", 4)
+        print("Hitbox Off", "Back to normal", 4)
     end
 end)
 
@@ -689,10 +657,10 @@ ScriptsTab:Toggle("Enable Nametags", false, function(state)
     ESPEnabled = state
     if state then
         EnableESP()
-        Notify("ESP On!", "Light pink nametags on others 💕", 4)
+        print("ESP On!", "Light pink nametags on others 💕", 4)
     else
         DisableESP()
-        Notify("ESP Off", "Nametags removed 👀", 4)
+        print("ESP Off", "Nametags removed 👀", 4)
     end
 end)
 
@@ -746,6 +714,6 @@ RunService.RenderStepped:Connect(function()
     end
 end)
 
-Notify("Script Loaded 💗", "Enjoy 🌸", 6)
+print("Script Loaded 💗", "Enjoy 🌸", 6)
 
 print("Full Pink Hub loaded! 💕")
